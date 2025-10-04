@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { LinkButton } from './LinkButton';
 import type { LinksMain } from '@/types/contentful';
+import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 interface LinktreePageProps {
   linksMain: LinksMain;
@@ -44,23 +46,23 @@ export function LinktreePage({ linksMain }: LinktreePageProps) {
           {/* Social Links */}
           <div className="flex justify-center space-x-4 mb-6">
             {instagram && (
-              <a href={`https://instagram.com/${instagram}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
-                Instagram
+              <a href={`https://instagram.com/${instagram}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 transition-colors duration-200">
+                <FaInstagram size={24} />
               </a>
             )}
             {linkedIn && (
-              <a href={`https://linkedin.com/in/${linkedIn}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
-                LinkedIn
+              <a href={`https://linkedin.com/in/${linkedIn}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors duration-200">
+                <FaLinkedin size={24} />
               </a>
             )}
             {twitter && (
-              <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
-                Twitter
+              <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors duration-200">
+                <FaXTwitter size={24} />
               </a>
             )}
             {youtube && (
-              <a href={`https://youtube.com/@${youtube}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
-                YouTube
+              <a href={`https://youtube.com/@${youtube}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-red-500 transition-colors duration-200">
+                <FaYoutube size={24} />
               </a>
             )}
           </div>

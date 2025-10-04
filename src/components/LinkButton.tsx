@@ -52,7 +52,7 @@ export function LinkButton({ link, theme }: LinkButtonProps) {
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold truncate">{title}</h3>
             {description && (
-              <p className="text-sm opacity-75 truncate">{description}</p>
+              <p className="text-sm opacity-75">{description}</p>
             )}
           </div>
         </div>

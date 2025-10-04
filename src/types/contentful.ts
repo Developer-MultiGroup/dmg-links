@@ -42,6 +42,8 @@ export interface LinksMain {
     title: string;
     avatar: ContentfulAsset;
     bio?: string;
+    siteTitle?: string;
+    siteIcon?: ContentfulAsset;
     instagram?: string;
     linkedIn?: string;
     twitter?: string;
