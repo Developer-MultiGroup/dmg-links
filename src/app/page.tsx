@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  const { siteTitle, siteIcon, title, bio } = linksMain.fields;
+  const { siteTitle, siteIcon, ogImage, title, bio } = linksMain.fields;
   
   return {
     title: siteTitle || title || 'Links Page',
@@ -22,6 +22,24 @@ export async function generateMetadata(): Promise<Metadata> {
       shortcut: `https:${siteIcon.fields.file.url}`,
       apple: `https:${siteIcon.fields.file.url}`,
     } : undefined,
+    openGraph: {
+      title: siteTitle || title || 'Links Page',
+      description: bio || 'Your personal link collection powered by Contentful',
+      images: ogImage?.fields ? [
+        {
+          url: `https:${ogImage.fields.file.url}`,
+          width: ogImage.fields.file.details.image?.width || 1200,
+          height: ogImage.fields.file.details.image?.height || 630,
+          alt: ogImage.fields.title,
+        }
+      ] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: siteTitle || title || 'Links Page',
+      description: bio || 'Your personal link collection powered by Contentful',
+      images: ogImage?.fields ? [`https:${ogImage.fields.file.url}`] : undefined,
+    },
   };
 }
 

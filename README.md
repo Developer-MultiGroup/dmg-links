@@ -110,6 +110,7 @@ Create a content type called `linksMain` with these fields:
 | `avatar` | Avatar | Media | No | Your profile picture |
 | `siteTitle` | Site Title | Short text | No | Browser tab title |
 | `siteIcon` | Site Icon | Media | No | Favicon for browser tab |
+| `ogImage` | Open Graph Image | Media | No | Social media preview image (1200x630px recommended) |
 | `instagram` | Instagram | Short text | No | Instagram username (without @) |
 | `linkedIn` | LinkedIn | Short text | No | LinkedIn username |
 | `twitter` | Twitter/X | Short text | No | Twitter/X username |
@@ -140,6 +141,7 @@ Create a content type called `linksLinkContent` with these fields:
    - **Avatar**: Upload your profile picture
    - **Site Title**: Page title for browser tab
    - **Site Icon**: Upload favicon (32x32px recommended)
+   - **Open Graph Image**: Upload social media preview image (1200x630px recommended)
    - **Social Media**: Add your usernames (without @ symbols)
 
 4. **Publish** the entry
@@ -167,6 +169,7 @@ Create a content type called `linksLinkContent` with these fields:
 ### Content Management Tips
 
 - **Images**: Use high-quality images, Contentful will optimize them
+- **Open Graph Image**: Use 1200x630px for optimal social media sharing
 - **URLs**: Always include `https://` in your URLs
 - **Ordering**: Use display order numbers (1, 2, 3...) for easy sorting
 - **Testing**: Use the preview feature to test before publishing
