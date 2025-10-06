@@ -2,17 +2,6 @@
 
 A modern, customizable link-in-bio page built with Next.js and powered by Contentful CMS. Create your own personalized link collection similar to Linktree, but with full control over design and content management.
 
-## 🎯 Why This Project Exists
-
-This project provides a **self-hosted alternative** to commercial link-in-bio services, giving you:
-
-- **Complete ownership** of your data and branding
-- **Customizable design** with modern UI components
-- **Content management** through Contentful's intuitive interface
-- **Social media integration** with proper icons and links
-- **SEO optimization** with dynamic metadata
-- **Fast performance** with Next.js and modern web technologies
-
 Perfect for creators, entrepreneurs, and anyone who wants a professional link collection page without monthly subscriptions.
 
 ## 🚀 Quick Start
@@ -38,6 +27,7 @@ Create a `.env.local` file in the root directory:
 ```bash
 CONTENTFUL_SPACE_ID=your_space_id_here
 CONTENTFUL_ACCESS_TOKEN=your_access_token_here
+CONTENTFUL_WEBHOOK_SECRET=your_webhook_secret_here
 ```
 
 ### 3. Run Development Server
@@ -60,9 +50,10 @@ src/
 │   └── globals.css     # Global styles
 ├── components/         # React components
 │   ├── LinktreePage.tsx    # Main page component
-│   └── LinkButton.tsx      # Individual link button
+│   └── LinkButton.tsx      # Individual link button with smart display logic
 ├── lib/               # Utilities
-│   └── contentful.ts      # Contentful client and API calls
+│   ├── contentful.ts      # Contentful client and API calls
+│   └── icons.tsx          # Heroicons integration and icon mapping
 └── types/             # TypeScript definitions
     └── contentful.ts      # Contentful data types
 ```
@@ -76,10 +67,14 @@ src/
 ### Key Features
 
 - **Dynamic Metadata**: Page title, description, and favicon from Contentful
+- **Custom Color Palette**: Dynamic Primary, secondary, and tertiary color system maintained in Contentful
+- **Smart Icon System**: Heroicons integration with intelligent image/icon display logic
 - **Social Media Icons**: Instagram, LinkedIn, X (Twitter), YouTube with hover effects
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Image Optimization**: Next.js Image component for optimal loading
 - **Type Safety**: Full TypeScript support with Contentful types
+- **Cache Invalidation**: Automatic cache updates via Contentful Webhooks
+- **Performance**: Optimized caching with Next.js unstable_cache and Contentful Webhooks
 
 ## 🎨 Contentful Setup Guide
 
@@ -116,6 +111,7 @@ Create a content type called `linksMain` with these fields:
 | `twitter` | Twitter/X | Short text | No | Twitter/X username |
 | `youtube` | YouTube | Short text | No | YouTube channel handle |
 | `links` | Links | References | No | Reference to link entries |
+| `colorPalette` | Color Palette | JSON Object | No | Custom color scheme (see Color Palette section) |
 
 #### LinksLinkContent Content Type
 
@@ -128,6 +124,7 @@ Create a content type called `linksLinkContent` with these fields:
 | `description` | Description | Long text | No | Link description |
 | `image` | Image | Media | No | Icon or preview image |
 | `imageStyle` | Image Style | Short text, list | No | "Icon Sized" or "Big" |
+| `icon` | Icon | Short text | No | Heroicons icon slug (see Icon Reference) |
 | `displayOrder` | Display Order | Number | Yes | Sort order (lower = first) |
 | `active` | Active | Boolean | Yes | Show/hide this link |
 
@@ -155,6 +152,7 @@ Create a content type called `linksLinkContent` with these fields:
    - **Description**: Optional description
    - **Image**: Optional icon or preview
    - **Image Style**: Choose "Icon Sized" (24px) or "Big" (preview)
+   - **Icon**: Optional Heroicons icon slug (see Icon Reference section)
    - **Display Order**: Number for sorting (1, 2, 3...)
    - **Active**: Toggle to show/hide
 
@@ -165,6 +163,118 @@ Create a content type called `linksLinkContent` with these fields:
 1. Edit your **LinksMain** entry
 2. In the **Links** field, add references to your link entries
 3. **Publish** the updated entry
+
+## 🎯 Icon System & LinkButton Behavior
+
+The platform includes a comprehensive icon system using [Heroicons](https://heroicons.com/) and smart display logic for images and icons.
+
+### Icon Reference
+
+Icons are powered by [Heroicons](https://heroicons.com/) - beautiful hand-crafted SVG icons by the makers of Tailwind CSS. Use the icon slugs from their website in your Contentful entries.
+
+**Popular Icon Slugs:**
+- `home` - Home icon
+- `envelope` - Email icon  
+- `phone` - Phone icon
+- `globeAlt` - Website icon
+- `documentText` - Document icon
+- `photo` - Photo icon
+- `videoCamera` - Video icon
+- `musicalNote` - Music icon
+- `shoppingBag` - Shopping icon
+- `heart` - Heart icon
+- `star` - Star icon
+- `bookmark` - Bookmark icon
+- `share` - Share icon
+- `chatBubbleLeftRight` - Chat icon
+- `user` - User icon
+- `cog` - Settings icon
+- `bell` - Notification icon
+- `magnifyingGlass` - Search icon
+- `plus` - Add icon
+- `arrowRight` - Arrow icon
+
+**Find more icons at:** [https://heroicons.com/](https://heroicons.com/)
+
+### LinkButton Display Logic
+
+The LinkButton component intelligently handles the combination of images and icons:
+
+#### When Image + Icon + imageStyle is "Big":
+- ✅ **Big image displayed on top** (full width, 128px height)
+- ✅ **Icon displayed on the left** in the content area below
+- This creates a prominent visual hierarchy
+
+#### When Image + Icon + imageStyle is "Icon Sized":
+- ✅ **Icon-sized image on the left** (24x24px)
+- ✅ **Icon on the right** in the content area
+- Both elements are displayed side by side
+
+#### When only Image exists:
+- **"Big" style**: Shows big image on top
+- **"Icon Sized" style**: Shows icon-sized image on the left
+
+#### When only Icon exists:
+- ✅ **Icon on the right** in the content area
+
+### Adding Icons to Your Links
+
+1. In your **LinksLinkContent** entry, add the **Icon** field
+2. Enter the icon slug from [Heroicons](https://heroicons.com/) (e.g., `home`, `envelope`, `phone`)
+3. The icon will automatically appear with proper styling and color theming
+4. Icons adapt to your color palette (primary color for normal state, tertiary for hover)
+
+## 🎨 Color Palette System
+
+The platform supports a flexible color palette system using three main colors: **Primary**, **Secondary**, and **Tertiary**.
+
+### Adding a Color Palette
+
+1. In your **LinksMain** entry, find the **Color Palette** field
+2. Add a JSON object with your color scheme:
+
+```json
+{
+  "primary": "#1f2937",
+  "secondary": "#64748b",
+  "tertiary": "#f8fafc"
+}
+```
+
+### Color Usage
+
+- **Primary**: Main text color, hover backgrounds, active states
+- **Secondary**: Secondary text, borders, social icons
+- **Tertiary**: Background colors, hover text
+
+### Example Color Palettes
+
+**Professional (Default):**
+```json
+{
+  "primary": "#1f2937",
+  "secondary": "#64748b",
+  "tertiary": "#f8fafc"
+}
+```
+
+**Vibrant Alternative:**
+```json
+{
+  "primary": "#ff6b35",
+  "secondary": "#f7931e",
+  "tertiary": "#2d1b69"
+}
+```
+
+**Dark Theme:**
+```json
+{
+  "primary": "#ffffff",
+  "secondary": "#a1a1aa",
+  "tertiary": "#18181b"
+}
+```
 
 ### Content Management Tips
 
@@ -199,7 +309,9 @@ Create a content type called `linksLinkContent` with these fields:
 3. Add environment variables:
    - `CONTENTFUL_SPACE_ID`
    - `CONTENTFUL_ACCESS_TOKEN`
-4. Ship!
+   - `CONTENTFUL_WEBHOOK_SECRET`
+4. Set up Contentful webhook (see Webhook Setup section)
+5. Ship!
 
 ### Other Platforms
 
@@ -209,12 +321,68 @@ This Next.js app can be deployed to any platform that supports Node.js:
 - DigitalOcean App Platform
 - AWS Amplify
 
+## 🔗 Webhook Setup (Cache Invalidation)
+
+Set up automatic cache invalidation so your site updates immediately when you publish content in Contentful.
+
+### 1. Create Webhook in Contentful
+
+1. Go to **Settings** → **Webhooks** in your Contentful space
+2. Click **Add webhook**
+3. Configure the webhook:
+
+**Basic Settings:**
+- **Name**: `Cache Invalidation`
+- **URL**: `https://yourdomain.com/api/webhook/contentful`
+- **HTTP Method**: `POST`
+- **Content Type**: `application/json`
+
+**Headers:**
+```
+x-webhook-secret: your_webhook_secret_here
+x-contentful-topic: ContentManagement.Entry.publish
+```
+
+**Triggers** (select these events):
+- ✅ Entry publish
+- ✅ Entry unpublish
+- ✅ Entry delete
+- ✅ Entry archive
+- ✅ Entry unarchive
+
+**Content Types** (select these):
+- ✅ `linksMain`
+- ✅ `linksLinkContent`
+
+### 2. Get Webhook Secret
+
+1. After creating the webhook, copy the **Webhook Secret**
+2. Add it to your environment variables as `CONTENTFUL_WEBHOOK_SECRET`
+
+### 3. Test the Webhook
+
+```bash
+# Test manual tag revalidation
+curl "https://yourdomain.com/api/webhook/contentful?secret=your_secret&tag=links-main"
+
+# Test with content type
+curl "https://yourdomain.com/api/webhook/contentful?secret=your_secret&type=linksMain"
+```
+
+### How It Works
+
+1. **Content Change**: You publish/unpublish content in Contentful
+2. **Webhook Trigger**: Contentful sends a POST request to your webhook endpoint
+3. **Cache Invalidation**: The webhook invalidates specific cache tags
+4. **Fresh Content**: Next request fetches updated content from Contentful
+
 ## 🔧 Customization
 
 ### Styling
 - Modify `src/app/globals.css` for global styles
 - Update Tailwind classes in components
-- Change colors in `LinktreePage.tsx` and `LinkButton.tsx`
+- Use the Color Palette system instead of hardcoded colors
+- Customize hover effects and transitions
 
 ### Layout
 - Adjust spacing and sizing in component files
@@ -223,9 +391,10 @@ This Next.js app can be deployed to any platform that supports Node.js:
 
 ### Features
 - Add new social media platforms
-- Implement custom themes
+- Create custom color palettes
 - Add analytics tracking
 - Create multiple page layouts
+- Extend webhook functionality for new content types
 
 ## 📚 Next Steps
 
@@ -234,8 +403,9 @@ After setting up your basic link page, consider:
 1. **Custom Domain**: Point your domain to the deployed app
 2. **Analytics**: Add Google Analytics or similar tracking
 3. **SEO**: Optimize meta tags and add structured data
-4. **Themes**: Create multiple color schemes
+4. **Color Palettes**: Create multiple color schemes for different moods
 5. **Advanced Features**: Add contact forms, newsletter signups, etc.
+6. **Performance**: Monitor cache hit rates and optimize webhook responses
 
 ---
 

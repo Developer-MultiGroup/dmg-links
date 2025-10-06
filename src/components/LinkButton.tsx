@@ -1,8 +1,8 @@
 'use client';
-
 import Image from 'next/image';
 import type { LinksLinkContent, ColorPalette } from '@/types/contentful';
 import { defaultColorPalette } from '@/types/contentful';
+import { getIcon } from '@/lib/icons';
 
 interface LinkButtonProps {
   link: LinksLinkContent;
@@ -10,15 +10,27 @@ interface LinkButtonProps {
 }
 
 export function LinkButton({ link, colorPalette }: LinkButtonProps) {
-  const { title, url, description, image, imageStyle } = link.fields;
-  
+  const { title, url, description, image, imageStyle, icon } = link.fields;
   const palette = colorPalette || defaultColorPalette;
-  
+
   const buttonStyle = {
     backgroundColor: palette.tertiary,
     color: palette.primary,
     borderColor: palette.secondary,
   };
+
+  const hasImage = image?.fields;
+  const hasIcon = icon;
+
+  // If image exists AND icon exists: Force image to be big on top
+  const forceBigImage = hasImage && hasIcon;
+
+  // Image display logic
+  const showBigImage = forceBigImage || (hasImage && imageStyle === 'Big');
+  const showIconSizedImage = hasImage && !forceBigImage && imageStyle === 'Icon Sized';
+
+  // Icon only shows on left if it exists
+  const showIconOnLeft = hasIcon;
 
   return (
     <a
@@ -38,7 +50,7 @@ export function LinkButton({ link, colorPalette }: LinkButtonProps) {
         e.currentTarget.style.borderColor = palette.secondary;
       }}
     >
-      {image?.fields && imageStyle === 'Big' && (
+      {showBigImage && (
         <div className="relative w-full h-32">
           <Image
             src={`https:${image.fields.file.url}`}
@@ -48,10 +60,16 @@ export function LinkButton({ link, colorPalette }: LinkButtonProps) {
           />
         </div>
       )}
-      
+
       <div className="p-4">
         <div className="flex items-center space-x-3">
-          {image?.fields && imageStyle === 'Icon Sized' && (
+          {showIconOnLeft && (
+            <div className="flex-shrink-0">
+              {getIcon(icon, "w-6 h-6")}
+            </div>
+          )}
+
+          {showIconSizedImage && (
             <div className="flex-shrink-0">
               <Image
                 src={`https:${image.fields.file.url}`}
@@ -62,6 +80,7 @@ export function LinkButton({ link, colorPalette }: LinkButtonProps) {
               />
             </div>
           )}
+
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold truncate">{title}</h3>
             {description && (

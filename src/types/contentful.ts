@@ -36,6 +36,7 @@ export interface LinksLinkContent {
     displayOrder: number;
     image?: ContentfulAsset;
     imageStyle?: 'Icon Sized' | 'Big';
+    icon?: string;
     active: boolean;
   };
   sys: {
