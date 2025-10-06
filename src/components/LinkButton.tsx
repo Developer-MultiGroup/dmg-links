@@ -4,6 +4,13 @@ import type { LinksLinkContent, ColorPalette } from '@/types/contentful';
 import { defaultColorPalette } from '@/types/contentful';
 import { getIcon } from '@/lib/icons';
 
+// Declare gtag for TypeScript
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 interface LinkButtonProps {
   link: LinksLinkContent;
   colorPalette?: ColorPalette;
@@ -12,6 +19,37 @@ interface LinkButtonProps {
 export function LinkButton({ link, colorPalette }: LinkButtonProps) {
   const { title, url, description, image, imageStyle, icon } = link.fields;
   const palette = colorPalette || defaultColorPalette;
+
+  // Track link clicks
+  const handleLinkClick = () => {
+    // Google Analytics 4 tracking
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'click', {
+        event_category: 'Link',
+        event_label: title,
+        value: url,
+        custom_parameter_1: imageStyle || 'none',
+        custom_parameter_2: icon || 'none'
+      });
+    }
+
+    // Send to custom analytics endpoint
+    if (typeof window !== 'undefined') {
+      fetch('/api/analytics/link-click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          title, 
+          url, 
+          timestamp: Date.now(),
+          userAgent: navigator.userAgent,
+          referer: document.referrer
+        })
+      }).catch(error => {
+        console.error('Analytics tracking failed:', error);
+      });
+    }
+  };
 
   const buttonStyle = {
     backgroundColor: palette.tertiary,
@@ -39,6 +77,7 @@ export function LinkButton({ link, colorPalette }: LinkButtonProps) {
       rel="noopener noreferrer"
       className="block w-full max-w-md mx-auto mb-4 rounded-lg border transition-all duration-200 hover:shadow-md overflow-hidden"
       style={buttonStyle}
+      onClick={handleLinkClick}
       onMouseEnter={(e) => {
         e.currentTarget.style.backgroundColor = palette.primary;
         e.currentTarget.style.color = palette.tertiary;

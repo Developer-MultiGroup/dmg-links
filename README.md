@@ -28,6 +28,9 @@ Create a `.env.local` file in the root directory:
 CONTENTFUL_SPACE_ID=your_space_id_here
 CONTENTFUL_ACCESS_TOKEN=your_access_token_here
 CONTENTFUL_WEBHOOK_SECRET=your_webhook_secret_here
+
+# Optional: Google Analytics 4 tracking
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 ```
 
 ### 3. Run Development Server
@@ -69,6 +72,7 @@ src/
 - **Dynamic Metadata**: Page title, description, and favicon from Contentful
 - **Custom Color Palette**: Dynamic Primary, secondary, and tertiary color system maintained in Contentful
 - **Smart Icon System**: Heroicons integration with intelligent image/icon display logic
+- **Link Tracking**: Google Analytics 4 integration with custom analytics API
 - **Social Media Icons**: Instagram, LinkedIn, X (Twitter), YouTube with hover effects
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Image Optimization**: Next.js Image component for optimal loading
@@ -375,6 +379,75 @@ curl "https://yourdomain.com/api/webhook/contentful?secret=your_secret&type=link
 2. **Webhook Trigger**: Contentful sends a POST request to your webhook endpoint
 3. **Cache Invalidation**: The webhook invalidates specific cache tags
 4. **Fresh Content**: Next request fetches updated content from Contentful
+
+## 📊 Link Tracking & Analytics
+
+The platform includes comprehensive link tracking to help you understand which links are most popular and how users interact with your page.
+
+### Google Analytics 4 Integration
+
+**Setup:**
+1. Create a Google Analytics 4 property at [analytics.google.com](https://analytics.google.com)
+2. Get your Measurement ID (format: `G-XXXXXXXXXX`)
+3. Add it to your `.env.local` file:
+   ```bash
+   NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+   ```
+
+**What's Tracked:**
+- ✅ **Link clicks** with title, URL, and metadata
+- ✅ **Page views** and user sessions
+- ✅ **User demographics** and behavior
+- ✅ **Custom events** for image styles and icons
+- ✅ **Real-time data** in GA4 dashboard
+
+### Custom Analytics API
+
+The platform also includes a custom analytics endpoint at `/api/analytics/link-click` that logs:
+- Link title and URL
+- Timestamp and user agent
+- Referrer information
+- IP address (for privacy-compliant analytics)
+
+**To enable custom tracking:**
+1. Uncomment the fetch call in `LinkButton.tsx`
+2. Set up a database to store click data
+3. Build a custom dashboard for your analytics
+
+### Alternative Tracking Solutions
+
+**Privacy-Focused Options:**
+- **Plausible Analytics**: Privacy-first, GDPR compliant
+- **Umami**: Self-hosted, open-source analytics
+- **Fathom**: Simple, privacy-focused analytics
+
+**Implementation:**
+```html
+<!-- Plausible -->
+<script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
+
+<!-- Umami -->
+<script async src="https://your-umami-instance.com/script.js" data-website-id="your-id"></script>
+```
+
+### Analytics Data You'll Get
+
+**Link Performance:**
+- Most clicked links
+- Click-through rates
+- Time of day patterns
+- Geographic distribution
+
+**User Behavior:**
+- Session duration
+- Bounce rate
+- Device types
+- Traffic sources
+
+**Content Insights:**
+- Which image styles perform best
+- Icon vs. image preferences
+- Description impact on clicks
 
 ## 🔧 Customization
 
