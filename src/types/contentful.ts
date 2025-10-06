@@ -1,3 +1,10 @@
+// Color Palette Types
+export interface ColorPalette {
+  primary: string;
+  secondary: string;
+  tertiary: string;
+}
+
 // Contentful Types
 export interface ContentfulAsset {
   sys: {
@@ -50,6 +57,7 @@ export interface LinksMain {
     twitter?: string;
     youtube?: string;
     links: LinksLinkContent[];
+    colorPalette?: ColorPalette;
   };
   sys: {
     id: string;
@@ -74,12 +82,16 @@ export interface ContentfulResponse<T> {
 // Component Props Types
 export interface LinkButtonProps {
   link: LinksLinkContent;
-  theme: {
-    backgroundColor?: string;
-    textColor?: string;
-  };
+  colorPalette?: ColorPalette;
 }
 
 export interface LinktreePageProps {
   linksMain: LinksMain;
 }
+
+// Default color palette for fallback
+export const defaultColorPalette: ColorPalette = {
+  primary: '#1f2937',
+  secondary: '#64748b',
+  tertiary: '#f8fafc',
+};

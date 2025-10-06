@@ -1,6 +1,9 @@
+'use client';
+
 import Image from 'next/image';
 import { LinkButton } from './LinkButton';
-import type { LinksMain } from '@/types/contentful';
+import type { LinksMain, ColorPalette } from '@/types/contentful';
+import { defaultColorPalette } from '@/types/contentful';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 
@@ -9,11 +12,13 @@ interface LinktreePageProps {
 }
 
 export function LinktreePage({ linksMain }: LinktreePageProps) {
-  const { title, bio, avatar, instagram, linkedIn, twitter, youtube, links } = linksMain.fields;
+  const { title, bio, avatar, instagram, linkedIn, twitter, youtube, links, colorPalette } = linksMain.fields;
+  
+  const palette = colorPalette || defaultColorPalette;
   
   const pageStyle = {
-    backgroundColor: '#f8fafc',
-    color: '#1f2937',
+    backgroundColor: palette.tertiary,
+    color: palette.primary,
   };
 
   return (
@@ -46,22 +51,78 @@ export function LinktreePage({ linksMain }: LinktreePageProps) {
           {/* Social Links */}
           <div className="flex justify-center space-x-4 mb-6">
             {instagram && (
-              <a href={`https://instagram.com/${instagram}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 transition-colors duration-200">
+              <a 
+                href={`https://instagram.com/${instagram}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="transition-colors duration-200"
+                style={{ 
+                  color: palette.secondary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = palette.primary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = palette.secondary;
+                }}
+              >
                 <FaInstagram size={24} />
               </a>
             )}
             {linkedIn && (
-              <a href={`https://linkedin.com/in/${linkedIn}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors duration-200">
+              <a 
+                href={`https://linkedin.com/in/${linkedIn}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="transition-colors duration-200"
+                style={{ 
+                  color: palette.secondary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = palette.primary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = palette.secondary;
+                }}
+              >
                 <FaLinkedin size={24} />
               </a>
             )}
             {twitter && (
-              <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors duration-200">
+              <a 
+                href={`https://twitter.com/${twitter}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="transition-colors duration-200"
+                style={{ 
+                  color: palette.secondary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = palette.primary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = palette.secondary;
+                }}
+              >
                 <FaXTwitter size={24} />
               </a>
             )}
             {youtube && (
-              <a href={`https://youtube.com/@${youtube}`} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-red-500 transition-colors duration-200">
+              <a 
+                href={`https://youtube.com/@${youtube}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="transition-colors duration-200"
+                style={{ 
+                  color: palette.secondary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = palette.primary;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = palette.secondary;
+                }}
+              >
                 <FaYoutube size={24} />
               </a>
             )}
@@ -77,10 +138,7 @@ export function LinktreePage({ linksMain }: LinktreePageProps) {
               <LinkButton
                 key={link.sys.id}
                 link={link}
-                theme={{
-                  backgroundColor: '#ffffff',
-                  textColor: '#000000',
-                }}
+                colorPalette={palette}
               />
             ))}
         </div>

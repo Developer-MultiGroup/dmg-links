@@ -1,20 +1,23 @@
+'use client';
+
 import Image from 'next/image';
-import type { LinksLinkContent } from '@/types/contentful';
+import type { LinksLinkContent, ColorPalette } from '@/types/contentful';
+import { defaultColorPalette } from '@/types/contentful';
 
 interface LinkButtonProps {
   link: LinksLinkContent;
-  theme: {
-    backgroundColor?: string;
-    textColor?: string;
-  };
+  colorPalette?: ColorPalette;
 }
 
-export function LinkButton({ link, theme }: LinkButtonProps) {
+export function LinkButton({ link, colorPalette }: LinkButtonProps) {
   const { title, url, description, image, imageStyle } = link.fields;
   
+  const palette = colorPalette || defaultColorPalette;
+  
   const buttonStyle = {
-    backgroundColor: theme.backgroundColor || '#ffffff',
-    color: theme.textColor || '#000000',
+    backgroundColor: palette.tertiary,
+    color: palette.primary,
+    borderColor: palette.secondary,
   };
 
   return (
@@ -22,8 +25,18 @@ export function LinkButton({ link, theme }: LinkButtonProps) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block w-full max-w-md mx-auto mb-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-md overflow-hidden"
+      className="block w-full max-w-md mx-auto mb-4 rounded-lg border transition-all duration-200 hover:shadow-md overflow-hidden"
       style={buttonStyle}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = palette.primary;
+        e.currentTarget.style.color = palette.tertiary;
+        e.currentTarget.style.borderColor = palette.primary;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = palette.tertiary;
+        e.currentTarget.style.color = palette.primary;
+        e.currentTarget.style.borderColor = palette.secondary;
+      }}
     >
       {image?.fields && imageStyle === 'Big' && (
         <div className="relative w-full h-32">
