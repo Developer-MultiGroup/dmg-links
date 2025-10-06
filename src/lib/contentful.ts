@@ -1,4 +1,5 @@
 import { createClient, Entry } from 'contentful';
+import { unstable_cache } from 'next/cache';
 import type { LinksMain, LinksLinkContent } from '@/types/contentful';
 
 const client = createClient({
@@ -42,3 +43,22 @@ export async function getAllLinks(): Promise<LinksLinkContent[]> {
     return [];
   }
 }
+
+// Cached versions with tags for webhook invalidation
+export const getCachedLinksMain = unstable_cache(
+  getLinksMain,
+  ['links-main'],
+  {
+    tags: ['links-main', 'links-content'],
+    revalidate: 3600, // 1 hour fallback
+  }
+);
+
+export const getCachedAllLinks = unstable_cache(
+  getAllLinks,
+  ['links-content'],
+  {
+    tags: ['links-content'],
+    revalidate: 3600, // 1 hour fallback
+  }
+);

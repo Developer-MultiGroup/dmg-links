@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getLinksMain } from '@/lib/contentful';
+import { getCachedLinksMain } from '@/lib/contentful';
 
 export async function GET() {
   try {
-    const linksMain = await getLinksMain();
+    const linksMain = await getCachedLinksMain();
     
     if (!linksMain) {
       return NextResponse.json(

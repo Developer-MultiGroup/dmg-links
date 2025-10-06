@@ -1,9 +1,9 @@
 import { LinktreePage } from '@/components/LinktreePage';
-import { getLinksMain } from '@/lib/contentful';
+import { getCachedLinksMain } from '@/lib/contentful';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const linksMain = await getLinksMain();
+  const linksMain = await getCachedLinksMain();
   
   if (!linksMain) {
     return {
@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const linksMain = await getLinksMain();
+  const linksMain = await getCachedLinksMain();
 
   if (!linksMain) {
     return (
