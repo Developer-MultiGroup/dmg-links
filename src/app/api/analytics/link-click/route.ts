@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date(timestamp).toISOString(),
       userAgent,
       referer,
-      ip: request.ip || 'unknown'
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     });
 
     // Here you could save to a database:
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     //     timestamp: new Date(timestamp),
     //     userAgent,
     //     referer,
-    //     ip: request.ip
+    //     ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
     //   }
     // });
 
